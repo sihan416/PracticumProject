@@ -1,58 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Hello World</title>
-    <!-- Add some CSS to change client UI -->
-    <style>
-    body {
-        background-color: #232F3E;
-        }
-    label, button {
-        color: #FF9900;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 20px;
-        margin-left: 40px;
-        }
-     input {
-        color: #232F3E;
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 20px;
-        margin-left: 20px;
-        }
-    </style>
-    <script>
-        // define the callAPI function that takes a first name and last name as parameters
-        var callAPI = (firstName,lastName)=>{
-            // instantiate a headers object
-            var myHeaders = new Headers();
-            // add content type header to object
-            myHeaders.append("Content-Type", "application/json");
-            // using built in JSON utility package turn object to string and store in a variable
-            var raw = JSON.stringify({"firstName":firstName,"lastName":lastName});
-            // create a JSON object with parameters for API call and store in a variable
-            var requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: raw,
-                redirect: 'follow'
-            };
-            // make API call with parameters and use promises to get response
-            fetch("https://f96rvuh0ak.execute-api.us-east-1.amazonaws.com/dev", requestOptions)
-            .then(response => response.text())
-            .then(result => alert(JSON.parse(result).body))
-            .catch(error => console.log('error', error));
-        }
-    </script>
+  <title>Sleep Health Tool</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <form>
-        <label>First Name :</label>
-        <input type="text" id="fName">
-        <label>Last Name :</label>
-        <input type="text" id="lName">
-        <!-- set button onClick method to call function we defined passing input values as parameters -->
-        <button type="button" onclick="callAPI(document.getElementById('fName').value,document.getElementById('lName').value)">Call API</button>
-    </form>
+
+<div class="bg-primary text-white container">
+  <h1>Sleep Health Tool</h1>
+  <p>Upload a JSON file and select the options to keep.</p>
+  <label for="data-type">Choose the data type:</label>
+
+  <select name="data-type" id="data-type" onchange="dataTypeChange()">
+    <option value="none">---</option>
+    <option value="blood-glucose">Blood Glucose</option>
+    <option value="weight">Weight</option>
+  </select>
+</div>
+<div class="pt-5 container">
+</div>
+<div class="bg-primary text-white container" id="blood-glucose-options" style="display: none;">
+  <h2>Blood Glucose Options</h2>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="meal">
+    <label class="form-check-label" for="meal">
+      With temporal relationship to meal
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="sleep">
+    <label class="form-check-label" for="sleep">
+      With temporal relationship to sleep
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="description">
+    <label class="form-check-label" for="description">
+      With descriptive statistic
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="timeframe">
+    <label class="form-check-label" for="timeframe">
+      With datetime time frame
+    </label>
+  </div>
+</div>
+<div class="bg-primary text-white container" id="weight-options" style="display: none;">
+  <h2>Body Weight Options</h2>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="only">
+    <label class="form-check-label" for="meal">
+      Only weight
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="weightDescription">
+    <label class="form-check-label" for="timeframe">
+      With descriptive statistic
+    </label>
+  </div>
+</div>
+<div class="pt-5 container">
+  <label class="form-label" for="customFile">Upload file in JSON format</label>
+  <input type="file" class="form-control" id="customFile" />
+</div>
+<div class="pt-5 container" id="in-progress" style="display: none;">
+  <p>Filtering in progress, please wait</p>
+</div>
+<div class="pt-5 container">
+  <button type="button" class="btn btn-primary" onclick="clickHandler()">Convert</button>
+</div>
+<div class="pt-5 container" id="download" style="display: none;">
+  <button type="button" class="btn btn-success" onclick="downloadHandler()">Download</button>
+</div>
+<script src="./lib/js/script.js"></script>
 </body>
 </html>
