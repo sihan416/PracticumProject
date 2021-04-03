@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+<style type="text/css">
+   body { background-color: rgba(63, 104, 191, 0.42) !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+</style>
 <head>
   <title>Sleep Health Tool</title>
   <meta charset="utf-8">
@@ -8,76 +11,174 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="./lib/js/script.js"></script>
+  <script>
+    $(document).ready(function(){
+      var sleepData = [];
+      var conditions;
+      var actionItems;
+      var missingData;
+      fetchData();
+    });
+  </script>
 </head>
 <body>
-
-<div class="bg-primary text-white container">
-  <h1>Sleep Health Tool</h1>
-  <p>Upload a JSON file and select the options to keep.</p>
-  <label for="data-type">Choose the data type:</label>
-
-  <select name="data-type" id="data-type" onchange="dataTypeChange()">
-    <option value="none">---</option>
-    <option value="blood-glucose">Blood Glucose</option>
-    <option value="weight">Weight</option>
-  </select>
+<div class="bg-primary text-white rounded container">
+  <h1>Healthy Sleep Monitoring Tool</h1>
+  <p>Welcome to your sleep monitoring dashboard.</p>
+</div>
+<div class="pt-10 container">
+</div>
+<div class="pt-10 bg-danger text-white rounded container" id="warnings">
+  <h3>Health Warnings</h3>
+  <ul class="list-group" id="warningList">
+  </ul>
 </div>
 <div class="pt-5 container">
-</div>
-<div class="bg-primary text-white container" id="blood-glucose-options" style="display: none;">
-  <h2>Blood Glucose Options</h2>
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="meal">
-    <label class="form-check-label" for="meal">
-      With temporal relationship to meal
-    </label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="sleep">
-    <label class="form-check-label" for="sleep">
-      With temporal relationship to sleep
-    </label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="description">
-    <label class="form-check-label" for="description">
-      With descriptive statistic
-    </label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="timeframe">
-    <label class="form-check-label" for="timeframe">
-      With datetime time frame
-    </label>
+  <div class="row">
+    <div class="col-9">
+      <div>
+        <canvas id="lineChart"></canvas>
+      </div>
+      <div class="pt-2 container">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">New Record</button>
+      </div>
+      <div class="pt-2 container">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal">Update Existing Record</button>
+      </div>
+    </div>
+    <div class="col text-center">
+      <div class="sticky-right bg-primary text-white rounded container" id="status">
+      </div>
+      <div class="sticky-right bg-primary text-white rounded container" id="action-items">
+        <h3>Action Items</h3>
+        <form id="actionItemsList">
+        </form>
+      </div>
+    </div>
   </div>
 </div>
-<div class="bg-primary text-white container" id="weight-options" style="display: none;">
-  <h2>Body Weight Options</h2>
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="only">
-    <label class="form-check-label" for="meal">
-      Only weight
-    </label>
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createModalLabel">Create New Record</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="createRecordType" class="col-sm-3 col-form-label">Record type:</label>
+            <div class="col-sm-10">
+              <select name="createRecordType" id="createRecordType" onchange="createRecordTypeChange()">
+                <option value="none">---</option>
+                <option value="Sleep">Sleep Value Record</option>
+                <option value="Condition">Health Condition Record</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row" id="createDateRow" style="display: none;">
+            <label for="createDate" class="col-sm-3 col-form-label">Date:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="createDate" placeholder="mm/dd/yyyy">
+            </div>
+          </div>
+          <div class="form-group row" id="createDurationRow" style="display: none;">
+            <label for="createDuration" class="col-sm-6 col-form-label">Sleep Duration (hours)</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="createDuration" placeholder=0>
+            </div>
+          </div>
+          <div class="form-group row" id="createConditionRow" style="display: none;">
+            <label for="createConditionType" class="col-sm-3 col-form-label">Condition:</label>
+            <div class="col-sm-10">
+              <select name="createConditionType" id="createConditionType">
+                <option value="none">---</option>
+                <option value="Memory Loss">Memory Loss</option>
+                <option value="Mood Swing">Mood Swings</option>
+                <option value="Weak Immune System">Weak Immune System</option>
+                <option value="Diabetes">Diabetes</option>
+                <option value="Low Sex Drive">Low Sex Drive</option>
+                <option value="Low Concentration">Low Concentration</option>
+                <option value="High Blood Pressure">High Blood Pressure</option>
+                <option value="Weight Gain">Weight Gain</option>
+                <option value="Heart Disease">Heart Disease</option>
+                <option value="Poor Balance">Poor Balance</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="clearCreate()" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="createHandler()" data-dismiss="modal">Create Record</button>
+      </div>
+    </div>
   </div>
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="weightDescription">
-    <label class="form-check-label" for="timeframe">
-      With descriptive statistic
-    </label>
+</div>
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Update Existing Record</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group row">
+            <label for="updateRecordType" class="col-sm-6 col-form-label">Record update type:</label>
+            <div class="col-sm-10">
+              <select name="updateRecordType" id="updateRecordType" onchange="updateRecordTypeChange()">
+                <option value="none">---</option>
+                <option value="Sleep">Sleep Record Duration</option>
+                <option value="Condition">Health Condition Record Removal</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row" id="updateDateRow" style="display: none;">
+            <label for="updateDate" class="col-sm-6 col-form-label">Date to update for:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="updateDate" placeholder="mm/dd/yyyy">
+            </div>
+          </div>
+          <div class="form-group row" id="updateDurationRow" style="display: none;">
+            <label for="updateDuration" class="col-sm-6 col-form-label">New Sleep Duration (hours)</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="updateDuration" placeholder=0>
+            </div>
+          </div>
+          <div class="form-group row" id="updateConditionRow" style="display: none;">
+            <label for="updateConditionType" class="col-sm-6 col-form-label">Condition to remove:</label>
+            <div class="col-sm-10">
+              <select name="updateConditionType" id="updateConditionType">
+                <option value="none">---</option>
+                <option value="Memory Loss">Memory Loss</option>
+                <option value="Mood Swing">Mood Swings</option>
+                <option value="Weak Immune System">Weak Immune System</option>
+                <option value="Diabetes">Diabetes</option>
+                <option value="Low Sex Drive">Low Sex Drive</option>
+                <option value="Low Concentration">Low Concentration</option>
+                <option value="High Blood Pressure">High Blood Pressure</option>
+                <option value="Weight Gain">Weight Gain</option>
+                <option value="Heart Disease">Heart Disease</option>
+                <option value="Poor Balance">Poor Balance</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="clearUpdate()" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="updateHandler()" data-dismiss="modal">Update Record</button>
+      </div>
+    </div>
   </div>
-</div>
-<div class="pt-5 container">
-  <label class="form-label" for="customFile">Upload file in JSON format</label>
-  <input type="file" class="form-control" id="customFile" />
-</div>
-<div class="pt-5 container" id="in-progress" style="display: none;">
-  <p>Filtering in progress, please wait</p>
-</div>
-<div class="pt-5 container">
-  <button type="button" class="btn btn-primary" onclick="clickHandler()">Convert</button>
-</div>
-<div class="pt-5 container" id="download" style="display: none;">
-  <button type="button" class="btn btn-success" onclick="downloadHandler()">Download</button>
 </div>
 <script src="./lib/js/script.js"></script>
 </body>
