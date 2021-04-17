@@ -1,29 +1,50 @@
-<form>
-<table align=center>
-  <tr>
-     <td>Username:</td>
-     <td><input type="text" name="username" style="background:#bfbfbf;color:#212121;border-color:#212121;" onFocus="this.style.background = '#ffffff';" onBlur="this.style.background = '#bfbfbf';"></td>
-  </tr>
+<style type="text/css">
+   body { background-color: rgba(63, 104, 191, 0.42) !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
+</style>
+<head>
+  <title>Sleep Health Tool</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+</head>
+<div class="bg-primary text-white rounded container">
+  <h1>Healthy Sleep Monitoring Tool</h1>
+</div>
+<div class="pt-10 container">
+</div>
+<div class="pt-2 bg-primary text-white rounded container">
+  <form>
+  <table align=center>
+    <tr>
+       <td>Username:</td>
+       <td><input type="text" name="username" style="background:#bfbfbf;color:#212121;border-color:#212121;" onFocus="this.style.background = '#ffffff';" onBlur="this.style.background = '#bfbfbf';"></td>
+    </tr>
 
-  <tr>
-     <td>Password:</td>
-     <td><input type="password" name="password" style="background:#bfbfbf;color:#212121;border-color:#212121;" onFocus="this.style.background = '#ffffff';" onBlur="this.style.background = '#bfbfbf';"></td>
-  </tr>
+    <tr>
+       <td>Password:</td>
+       <td><input type="password" name="password" style="background:#bfbfbf;color:#212121;border-color:#212121;" onFocus="this.style.background = '#ffffff';" onBlur="this.style.background = '#bfbfbf';"></td>
+    </tr>
 
-  <tr>
-     <td>Full Name:</td>
-     <td><input type="text" name="name" style="background:#bfbfbf;color:#212121;border-color:#212121;" onFocus="this.style.background = '#ffffff';" onBlur="this.style.background = '#bfbfbf';"></td>
-  </tr>
+    <tr>
+       <td>Full Name:</td>
+       <td><input type="text" name="name" style="background:#bfbfbf;color:#212121;border-color:#212121;" onFocus="this.style.background = '#ffffff';" onBlur="this.style.background = '#bfbfbf';"></td>
+    </tr>
 
-  <tr>
-     <td>Age:</td>
-     <td><input type="number" name="age" style="background:#bfbfbf;color:#212121;border-color:#212121;" onFocus="this.style.background = '#ffffff';" onBlur="this.style.background = '#bfbfbf';"></td>
-  </tr>
+    <tr>
+       <td>Age:</td>
+       <td><input type="number" name="age" style="background:#bfbfbf;color:#212121;border-color:#212121;" onFocus="this.style.background = '#ffffff';" onBlur="this.style.background = '#bfbfbf';"></td>
+    </tr>
 
-  <tr>
-  <td></td>
-  <td align=right><input type="button" value="Sign Up" onClick="signup(this.form);" style="background:#bfbfbf;color:#000000;border-color:#212121;" onMouseOver="this.style.color = '#404040';" onMouseOut="this.style.color = '#000000';" onFocusr="this.style.color = '#404040';" onBlur="this.style.color = '#000000';"></td>
-  </tr>
-</table>
-<script src="./lib/js/script.js"></script>
-</form>
+    <tr>
+    <td></td>
+    <td align=right><input type="button" value="Sign Up" onClick="signup(this.form);" style="background:#bfbfbf;color:#000000;border-color:#212121;" onMouseOver="this.style.color = '#404040';" onMouseOut="this.style.color = '#000000';" onFocusr="this.style.color = '#404040';" onBlur="this.style.color = '#000000';"></td>
+    </tr>
+  </table>
+  <script src="./lib/js/script.js"></script>
+  </form>
+</div>
