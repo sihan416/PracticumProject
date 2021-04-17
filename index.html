@@ -103,7 +103,7 @@
           <div class="form-group row" id="createConditionRow" style="display: none;">
             <label for="createConditionType" class="col-sm-3 col-form-label">Condition:</label>
             <div class="col-sm-10">
-              <select name="createConditionType" id="createConditionType">
+              <select name="createConditionType" id="createConditionType" onchange="createConditionTypeChange()">
                 <option value="none">---</option>
                 <option value="Memory Loss">Memory Loss</option>
                 <option value="Mood Swing">Mood Swings</option>
@@ -115,7 +115,14 @@
                 <option value="Weight Gain">Weight Gain</option>
                 <option value="Heart Disease">Heart Disease</option>
                 <option value="Poor Balance">Poor Balance</option>
+                <option value="Other">Other</option>
               </select>
+            </div>
+          </div>
+          <div class="form-group row" id="createCustomConditionRow" style="display: none;">
+            <label for="createDate" class="col-sm-3 col-form-label">Condition:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="createCustomCondition">
             </div>
           </div>
         </form>
@@ -163,7 +170,7 @@
           <div class="form-group row" id="updateConditionRow" style="display: none;">
             <label for="updateConditionType" class="col-sm-6 col-form-label">Condition to remove:</label>
             <div class="col-sm-10">
-              <select name="updateConditionType" id="updateConditionType">
+              <select name="updateConditionType" id="updateConditionType" onchange="deleteConditionTypeChange()">
                 <option value="none">---</option>
                 <option value="Memory Loss">Memory Loss</option>
                 <option value="Mood Swing">Mood Swings</option>
@@ -175,7 +182,14 @@
                 <option value="Weight Gain">Weight Gain</option>
                 <option value="Heart Disease">Heart Disease</option>
                 <option value="Poor Balance">Poor Balance</option>
+                <option value="Other">Other</option>
               </select>
+            </div>
+          </div>
+          <div class="form-group row" id="deleteCustomConditionRow" style="display: none;">
+            <label for="createDate" class="col-sm-3 col-form-label">Condition:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="deleteCustomCondition">
             </div>
           </div>
         </form>
